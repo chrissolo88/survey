@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Survey Title{% endblock %}
+{% block content %}
+<div class="row justify-content-md-center m-3">
+    <form action="/answer" method="POST">
+        <h2>Question {{number + 1}}: {{question}}</h2>
+        {% if choices%}
+        {% for choice in choices %}
+            <label for="{{choice}}">{{choice}}</label>
+            <input class="m-3" type="radio" name="answer" id="{{choice}}" value="{{choice}}">
+        {% endfor %}
+        {% endif %}
+        {% if allow_text == true %}
+            <br><label for="comment">Comment:</label><br>
+            <textarea name="comment" id="comment" cols="30" rows="3"></textarea>
+        {% endif %}
+        <br><button class="m-3">Next Question</button>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Survey Title{% endblock %}
+{% block content %}
+<div class="row justify-content-md-center m-3">
+    <h1>{{title}}</h1>
+</div>
+<div class="row justify-content-md-center">
+    <h2 class="lead">{{instructions}}</h2>
+</div>
+<div class="row justify-content-md-center m-4">
+    <form action="/new">
+        <button>Start Survey</button>
+    </form>
+</div>
+{% endblock %}

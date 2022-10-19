@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Survey Title{% endblock %}
+{% block content %}
+<div class="row justify-content-md-center m-3">
+    <p class="display-4">Thanks For Submitting Your Answers!</p>
+</div>
+<div class="row justify-content-md-center m-3">
+    <ol>
+        {% for i in range(num) %}
+        {% if responses[i] is string %}
+        <li><b>{{questions[i].question}} </b>{{responses[i]}}</li>
+        {% else %}
+        <li><p><b>{{questions[i].question}} </b>{{responses[i][0]}} <br>COMMENT:{{responses[i][1]}}</p></li>
+        {% endif %}
+        {% endfor %}
+    </ol>
+</div>
+{% endblock %}

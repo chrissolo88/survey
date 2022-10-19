@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}SurveyMagic Home{% endblock %}
+{% block content %}
+<div class="row justify-content-md-center m-3">
+    <p class="display-4">Choose a Survey:</p>
+</div>
+<div class="row justify-content-md-center m-4">
+    <form action="/title" method="POST">
+        {% for key, survey in surveys.items() %}
+            <label class="m-2" for="{{key}}">{{survey.title}}</label>
+            <input type="radio" name="survey" id="{{key}}" value="{{key}}"><br>
+        {% endfor %}
+        <button class="m-2">Start Survey</button>
+    </form>
+</div>
+{% endblock %}
