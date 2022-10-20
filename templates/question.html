@@ -16,7 +16,10 @@
             <br><label for="comment">Comment:</label><br>
             <textarea name="comment" id="comment" cols="30" rows="3"></textarea>
         {% endif %}
-        <br><button formaction="/back" class="m-3">&lt;Back</button>
+        <br>
+        {% if session['qnumber'] > 0 %}
+        <button formaction="/back" class="m-3">&lt;Back</button>
+        {% endif %}
         <button class="m-3">Next Question&gt;</button>
     </form>
 </div>
