@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, flash, session
+from flask import Flask, request, render_template, redirect, flash, session, make_response
 from flask_debugtoolbar import DebugToolbarExtension
 from surveys import surveys
 
@@ -23,6 +23,8 @@ def title_page():
 @app.route("/new")
 def new_responses():
     session['responses'] = []
+    survey_key = session['survey_key']
+    res.set_cookie(f'{survey_key}','started')
     return redirect("/question/0")
 
 @app.route('/question/<int:number>')
