@@ -59,6 +59,7 @@ def question_display(number):
     session['qnumber'] = number
     survey_key = session.get('survey_key')
     responses = session.get('responses')
+    response = ''
     if len(surveys[survey_key].questions) == len(responses):
         return redirect('/end')
     elif number <= len(responses) and number >= 0:
@@ -67,8 +68,7 @@ def question_display(number):
         allow_text = surveys[survey_key].questions[number].allow_text
         if number < len(responses):
             response = responses[number]
-            return render_template('question.html',question=question,number=number,choices=choices, allow_text=allow_text, response=response)
-        return render_template('question.html',question=question,number=number,choices=choices, allow_text=allow_text)
+        return render_template('question.html',question=question,number=number,choices=choices, allow_text=allow_text, response=response)
     else:
         flash(f"Invalid question, redirecting to '/question/{len(responses)}'")
         return redirect(f'/question/{len(responses)}')
