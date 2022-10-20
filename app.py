@@ -24,7 +24,17 @@ def title_page():
 def new_responses():
     session['responses'] = []
     survey_key = session['survey_key']
-    res.set_cookie(f'{survey_key}','started')
+    if session.get('started') == None:
+        session['started'] = []
+    started = session['started']
+    if survey_key not in started:
+        started.append(survey_key)
+        session['started'] = started
+    if session.get('finished'):
+        for survey_resp in session['finished']:
+            if survey_key in survey_resp:
+                flash(f"Looks like you already completed {survey_key}")
+                return redirect('/end')
     return redirect("/question/0")
 
 @app.route('/question/<int:number>')
@@ -37,7 +47,6 @@ def question_display(number):
         question = surveys[survey_key].questions[number].question
         choices = surveys[survey_key].questions[number].choices
         allow_text = surveys[survey_key].questions[number].allow_text
-        print(question, number, choices)
         return render_template('question.html',question=question,number=number,choices=choices, allow_text=allow_text)
     else:
         flash(f"Invalid question, redirecting to '/question/{len(responses)}'")
@@ -65,6 +74,19 @@ def thanks_page():
     survey_key = session['survey_key']
     responses = session['responses']
     questions = surveys[survey_key].questions
+    
+    if session.get('finished') == None:
+        session['finished'] = []
+        
+    finished = session['finished']
+    
+    for survey_resp in finshed:
+        if survey_key in survey_resp:
+            responses = survey_resp[1]
+            
+    if [survey_key,responses] not in finished:
+        finished.append([survey_key,responses])
+        session['finished'] = finished
     num = len(responses)
-    print(type(responses[3]))
+       
     return render_template('end.html', num=num, responses=responses, questions=questions)
