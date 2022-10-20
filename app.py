@@ -113,3 +113,8 @@ def thanks_page():
     num = len(responses)
        
     return render_template('end.html', num=num, responses=responses, questions=questions)
+
+@app.route('/back')
+def back_page():
+    qnumber = session['qnumber']
+    return redirect(f'/question/{qnumber-1}')
