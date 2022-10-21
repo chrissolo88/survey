@@ -31,7 +31,7 @@ def new_responses():
     #if True redirect to /end with flash message alerting user
     if session.get('finished'):
         if survey_key in session['finished']:
-            flash(f"Looks like you already completed {survey_key}")
+            flash(f"Looks like you already completed {surveys[survey_key].title}")
             return redirect('/end')
         
     #Check if session['started'] exists, if False create session['started'] as empty dict
@@ -57,17 +57,19 @@ def new_responses():
 @app.route('/question/<int:number>')
 def question_display(number):
     session['qnumber'] = number
+    qnumber = session['qnumber']
     survey_key = session.get('survey_key')
     responses = session.get('responses')
     response = ''
     if len(surveys[survey_key].questions) == len(responses):
         return redirect('/end')
-    elif number <= len(responses) and number >= 0:
-        question = surveys[survey_key].questions[number].question
-        choices = surveys[survey_key].questions[number].choices
-        allow_text = surveys[survey_key].questions[number].allow_text
-        if number < len(responses):
-            response = responses[number]
+    elif qnumber <= len(responses) and qnumber >= 0:
+        question = surveys[survey_key].questions[qnumber].question
+        choices = surveys[survey_key].questions[qnumber].choices
+        allow_text = surveys[survey_key].questions[qnumber].allow_text
+        if qnumber < len(responses):
+            response = responses[qnumber]
+        number = len(surveys[survey_key].questions)
         return render_template('question.html',question=question,number=number,choices=choices, allow_text=allow_text, response=response)
     else:
         flash(f"Invalid question, redirecting to '/question/{len(responses)}'")
@@ -79,16 +81,20 @@ def record_answer():
     responses = session['responses']
     started = session['started']
     qnumber = session['qnumber']
-    response = [request.form['answer'],request.form.['comment']] if request.form.get('comment') else request.form['answer']
-    if qnumber == len(responses)
+    response = [request.form['answer'],request.form.get('comment')] if request.form.get('comment') else request.form['answer']
+    if qnumber == len(responses):
         responses.append(response)
     else:
         responses[qnumber] = response
     started[survey_key] = responses 
     session['responses'] = responses
     session['started'] = started
+    print('**********')
+    print(f'started{started}')
+    print(f"finished{session.get('finished')}")
+    print('**********')
     if len(surveys[survey_key].questions) > len(responses):
-        return redirect(f'/question/{len(responses)}')
+        return redirect(f'/question/{qnumber+1}')
     else:
         return redirect('/end')
     
@@ -109,12 +115,17 @@ def thanks_page():
     if survey_key not in finished:
         finished[survey_key] = responses
         session['finished'] = finished
+        started = session['started']
         del started[survey_key]
+        session['started'] = started
     num = len(responses)
-       
+    print('**********')
+    print(f'started{session["started"]}')
+    print(f"finished{session.get('finished')}")
+    print('**********')
     return render_template('end.html', num=num, responses=responses, questions=questions)
 
-@app.route('/back')
+@app.route('/back', methods=["POST"])
 def back_page():
     qnumber = session['qnumber']
     return redirect(f'/question/{qnumber-1}')
